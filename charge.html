@@ -1,0 +1,116 @@
+<html>
+<style>
+    #ion {
+        width: 50px;
+        height: 50px;
+        position: relative;
+        background-color: red;
+        border-radius: 50%;
+        left: 400px;
+        top: 300px;
+    }
+    #electron1 {
+        width: 20px;
+        height: 20px;
+        position: relative;
+        background-color: green;
+        border-radius: 50%;
+        left: 200px;
+        top: 200px;
+    }
+    #electron2 {
+        width: 20px;
+        height: 20px;
+        position: relative;
+        background-color: lawngreen;
+        border-radius: 50%;
+        left: 600px;
+        top: 700px;
+    }
+</style>
+<body style="background-color: black;">
+    <p>
+        <button onclick="start()">Start</button>
+    </p>
+
+    <a id="time" style="color: white"></a>
+    <a id="position" style="color: white"></a>
+
+    <div>
+        <div id=ion></div>
+        <div id="electron1"></div>
+        <div id="electron2"></div>
+    </div>
+
+    <script>
+            function start() {
+                // Timer (ms)
+                let id = setInterval(frame, 10)
+
+                let ion = document.getElementById("ion")
+                let electron = [document.getElementById("electron1"), document.getElementById("electron2")];
+
+                //Charges
+                const e = [-1.0,-1.0];
+                const p = + 1.0;
+
+                // Time
+                let t = 0;
+                let dt = 0.1;
+
+                // Position
+                let x = [200.0,500.0];
+                let y = [200.0,550.0];              
+
+                // Force
+
+
+                //Velocity
+                let vx = [5.0*(Math.random()-0.5),-5.0*(Math.random()-0.5)];
+                let vy = [5.0*(Math.random()-0.5),-5.0*(Math.random()-0.5)];
+
+                //Acceleration
+                let ax = [0.0,0.0];
+                let ay = [0.0,0.0];
+
+                function frame() {
+                    //Update time 
+                    t = t + dt;
+
+                   for (i = 0; i < 2; i++){ 
+                    
+                    // Position
+                    let dx = x[i] - 400 + 25.0;
+                    let dy = y[i] - 300 + 25.0;
+                    let r = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+
+                    let f = coulomb(e[i],p,r);
+                   
+                    //Update Velocity
+                    vx[i] = vx[i] + ax[i] * dt;
+                    vy[i] = vy[i] + ay[i] * dt;
+
+                    //Update position
+                    x[i] = x[i] + vx[i] * dt;
+                    y[i] = y[i] + vy[i] * dt;
+
+                    //Update acceleration
+                    ax[i] = f*dx/r;
+                    ay[i] = f*dy/r;
+
+                    electron[i].style.left = Math.round(x[i]) + 'px';
+                    electron[i].style.top = Math.round(y[i]) + 'px';
+
+
+                   }
+                   document.getElementById("time").innerHTML = "Time: "+Math.round(t);                 
+                 }
+
+                 function coulomb (q1,q2,r){
+                    return 4000*q1*q2/Math.pow(r,2);
+                 }
+            }
+    </script>
+</body>
+
+</html>
